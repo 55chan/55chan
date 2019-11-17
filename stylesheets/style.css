@@ -67,7 +67,6 @@ h1 {
   font-family: tahoma;
   letter-spacing: -2px;
   font-size: 20pt;
-  margin: 0;
 }
 
 header div.subtitle,h1 {
@@ -286,7 +285,6 @@ div.post {
 
 div.post div.body {
   word-wrap: break-word;
-  white-space: pre-wrap;
 }
 
 div.post.reply {

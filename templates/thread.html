@@ -44,7 +44,7 @@
 
 	{% include 'attention_bar.html' %}
 
-	<div class="banner">{% trans %}Posting mode: Reply{% endtrans %} <a class="unimportant" href="{{ return }}">[{% trans %}Return{% endtrans %}]</a> <a class="unimportant" href="#bottom">[{% trans %}Go to bottom {% endtrans %}]</a></div>
+	<div class="banner" style="display: none"></div>
 
 	{{ config.ad.top }}
 
@@ -83,10 +83,12 @@
 	{{ config.ad.bottom }}
 
 	<footer>
-		<p class="unimportant" style="margin-top:20px;text-align:center;">- Tinyboard + 
-			<a href="https://engine.vichan.net/">vichan</a> {{ config.version }} -
-		<br>Tinyboard Copyright &copy; 2010-2014 Tinyboard Development Group    
-		<br><a href="https://engine.vichan.net/">vichan</a> Copyright &copy; 2012-2018 vichan-devel</p>
+                <p class="unimportant" style="margin-top:20px;text-align:center;">- Tinyboard +
+                        <a href="https://engine.vichan.net/">vichan</a> + <a href="https://55chan.org">SS</a> {{ config.version }} -
+                <br>Tinyboard Copyright &copy; 2010-2014 Tinyboard Development Group
+                <br><a href="https://engine.vichan.net/">vichan</a> Copyright &copy; 2012-2018 vichan-devel
+                <br><a href="https://github.com/55chan/55chan">SS</a> Copyright &copy; 2019-2019 55chan Administration</p>
+
 		{% for footer in config.footer %}<p class="unimportant" style="text-align:center;">{{ footer }}</p>{% endfor %}
 	</footer>
 	<script type="text/javascript">{% raw %}
