@@ -1,26 +1,9 @@
-vichan - A lightweight and full featured PHP imageboard.
+55chan - A fork of vichan
 ========================================================
-
-**Vichan has next to no active development, however you can still pay for support. Basic support costs $40/hr, and is only payable in BTC. New features depend on what you want. Email COPYPASTE &lt;AT&gt; KITTENS &lt;DOT&gt; PH if you're interested&mdash;Vichan forks such as OpenIB are included in this offer.**
 
 About
 ------------
-vichan is a free light-weight, fast, highly configurable and user-friendly
-imageboard software package. It is written in PHP and has few dependencies.
-
-In November 2017, Marcin Łabanowski (@czaks) retired as maintainer for personal reasons. His retirement may be temporary, but in his absence, Fredrick Brennan (@ctrlcctrlv), co-maintainer since 2013, and #3 in terms of number of commits, took his place as interim sole maintianer and point of contact. (See [issue #266](https://github.com/vichan-devel/vichan/issues/266))
-
-*Security problems can be reported to Fredrick Brennan at his email: COPYPASTE \<AT\> KITTENS \<DOT\> PH.*
-	
-Vichan is still accepting patches, but there is at the moment no active development besides fixing security problems and other serious bugs as they emerge. Given the lack of active development, we strongly urge you to consider other imageboard packages. It is the opinion of the vichan development team that no new vichan imageboards should be deployed, and other imageboard packages, such as lynxchan, used instead.
-
-History
-------------
-vichan is a fork of (now defunc'd) [Tinyboard](http://github.com/savetheinternet/Tinyboard),
-a great imageboard package, actively building on it and adding a lot of features and other
-improvements.
-
-Some documentation may be found on our [wiki](https://github.com/vichan-devel/vichan/wiki). (feel free to contribute)
+55chan is a fork of vichan, a great imageboard package, we'll do our best to actively build on it.
 
 Requirements
 ------------
@@ -32,7 +15,7 @@ Requirements
 5.	[PHP PDO](http://www.php.net/manual/en/intro.pdo.php)
 6.	A Unix-like OS, preferrably FreeBSD or Linux
 
-We try to make sure vichan is compatible with all major web servers. vichan does not include an Apache ```.htaccess``` file nor does it need one.
+We try to make sure 55chan is compatible with all major web servers. 55chan does not include an Apache ```.htaccess``` file nor does it need one.
 
 ### Recommended
 1.	MySQL/MariaDB server >= 5.5.3
@@ -43,17 +26,17 @@ We try to make sure vichan is compatible with all major web servers. vichan does
 
 Contributing
 ------------
-You can contribute to vichan by:
+You can contribute to 55chan by:
 *	Developing patches/improvements/translations and using GitHub to submit pull requests
 *	Providing feedback and suggestions
 *	Writing/editing documentation
 
 Installation
 -------------
-1.	Download and extract vichan to your web directory or get the latest
+1.	Download and extract 55chan to your web directory or get the latest
 	development version with:
 
-        git clone git://github.com/vichan-devel/vichan.git
+        git clone git://github.com/55chan/55chan.git
 	
 2.	Navigate to ```install.php``` in your web browser and follow the
 	prompts.
