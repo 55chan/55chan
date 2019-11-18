@@ -28,6 +28,8 @@ if (!extension_loaded('gettext')) {
 	require_once 'inc/lib/gettext/gettext.inc';
 }
 
+require_once '8chan-captcha/functions.php';
+
 // the user is not currently logged in as a moderator
 $mod = false;
 

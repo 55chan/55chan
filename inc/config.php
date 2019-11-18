@@ -315,6 +315,14 @@
 	// Enable custom captcha provider
 	$config['captcha']['enabled'] = false;
 
+
+        // Custom CAPTCHA provider general settings
+        // Captcha expiration:
+        $config['captcha']['expires_in'] = 10 * 60;
+
+        // Captcha length:
+        $config['captcha']['length'] = 6;
+
 	//New thread captcha
  	//Require solving a captcha to post a thread. 
  	//Default off.

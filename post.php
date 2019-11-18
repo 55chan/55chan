@@ -390,34 +390,33 @@ if (isset($_POST['delete'])) {
 		// Check if banned
 		checkBan($board['uri']);
 
-		// Check for CAPTCHA right after opening the board so the "return" link is in there
-		if ($config['recaptcha']) {
-			if (!isset($_POST['g-recaptcha-response']))
-				error($config['error']['bot']);	
+	// Check for CAPTCHA right after opening the board so the "return" link is in there
+	if ($config['recaptcha']) {
+        if (!isset($_POST['g-recaptcha-response'])) {
+            error($config['error']['bot']);
+        }
+        $recaptcha = new \ReCaptcha\ReCaptcha($config['recaptcha_private']);
+        $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+        if (!$resp->isSuccess()) {
+            error($config['error']['captcha']);
+        }
+	}
 
-			// Check what reCAPTCHA has to say...
-			$resp = json_decode(file_get_contents(sprintf('https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s&remoteip=%s',
-				$config['recaptcha_private'],
-				urlencode($_POST['g-recaptcha-response']),
-				$_SERVER['REMOTE_ADDR'])), true);
-
-			if (!$resp['success']) {
-				error($config['error']['captcha']);
-			}
-		// Same, but now with our custom captcha provider
- 		if (($config['captcha']['enabled']) || (($post['op']) && ($config['new_thread_capt'])) ) {
+	// Same, but now with our custom captcha provider
+	//New thread captcha
+	if (($config['captcha']['enabled']) || (($post['op']) && ($config['new_thread_capt'])) ) {
 		$resp = file_get_contents($config['captcha']['provider_check'] . "?" . http_build_query([
 			'mode' => 'check',
 			'text' => $_POST['captcha_text'],
 			'extra' => $config['captcha']['extra'],
 			'cookie' => $_POST['captcha_cookie']
 		]));
+
 		if ($resp !== '1') {
                         error($config['error']['captcha'] .
 			'<script>if (actually_load_captcha !== undefined) actually_load_captcha("'.$config['captcha']['provider_get'].'", "'.$config['captcha']['extra'].'");</script>');
 		}
 	}
-}
 
 		if (!(($post['op'] && $_POST['post'] == $config['button_newtopic']) ||
 			(!$post['op'] && $_POST['post'] == $config['button_reply'])))
