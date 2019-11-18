@@ -6,6 +6,7 @@
  * Copyright (c) 2012-2013 Michael Save <savetheinternet@tinyboard.org>
  * Copyright (c) 2013 Czterooki <czterooki1337@gmail.com>
  * Copyright (c) 2013-2014 Marcin Łabanowski <marcin@6irc.net>
+ * Copyright (c) 2019 John <admin@55chan.org>
  *
  * Usage:
  *   $config['additional_javascript'][] = 'js/jquery.min.js';
@@ -19,12 +20,12 @@ $(document).ready(function(){
 
 	var do_expand = function() {
 		$(this)
-			.html($(this).text().replace(_("Click reply to view."), '<a href="javascript:void(0)">'+_("Click to expand")+'</a>.'))
+	.html($(this).text().replace(_("Click Reply to view."), '<a href="javascript:void(0)"><img class="more" src="/static/mold.gif" style="margin:0 3px -4px 1px;font-family:monospace;" title "Expandir thread" alt="[+]"></a>'))
 			.find('a').click(window.expand_fun = function() {
 				var thread = $(this).parents('[id^="thread_"]');
 				var id = thread.attr('id').replace(/^thread_/, '');
 				$.ajax({
-					url: thread.find('p.intro a.post_no:first').attr('href'),
+					url: thread.find('div.post:not(.hidden) p.intro a.post_no:first').attr('href'),
 					context: document.body,
 					success: function(data) {
 						var last_expanded = false;
@@ -47,8 +48,8 @@ $(document).ready(function(){
 
 						thread.find("span.omitted").css('display', 'none');
 
-						$('<span class="omitted hide-expanded"><a href="javascript:void(0)">' + _('Hide expanded replies') + '</a>.</span>')
-							.insertAfter(thread.find('.op div.body, .op span.omitted').last())
+						$('<span class="omitted hide-expanded"><a href="javascript:void(0)"><img class="lesss" src="/static/mold.gif" title="Ocultar respostas expandidas" alt="[-]"></a></span>')
+						.insertAfter(thread.find('.op div.body, .op span.omitted').last())
 							.click(function() {
 								thread.find('.expanded').remove();
 								$(this).parent().find(".omitted:not(.hide-expanded)").css('display', '');
@@ -66,4 +67,3 @@ $(document).ready(function(){
 			$(post).find('div.post.op span.omitted').each(do_expand);
 		}
 	});
-});
