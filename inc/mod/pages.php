@@ -103,6 +103,9 @@ function mod_dashboard() {
 	$query = query('SELECT COUNT(*) FROM ``reports``') or error(db_error($query));
 	$args['reports'] = $query->fetchColumn();
 	
+	$query = query('SELECT COUNT(*) FROM ``ban_appeals`` WHERE `denied` = 0') or error(db_error($query));
+	$args['appeals'] = $query->fetchColumn();
+
 	if ($mod['type'] >= ADMIN && $config['check_updates']) {
 		if (!$config['version'])
 			error(_('Could not find current version! (Check .installed)'));

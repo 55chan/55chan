@@ -89,9 +89,13 @@
 		{% if mod|hasPermission(config.mod.view_banlist) %}
 			<li><a href="?/bans">{% trans 'Ban list' %}</a></li>
 		{% endif %}
-		{% if config.ban_appeals and mod|hasPermission(config.mod.view_ban_appeals) %}
-			<li><a href="?/ban-appeals">{% trans 'Ban appeals' %}</a></li>
-		{% endif %}
+
+			<li>
+				{% if appeals > 0 %}<strong>{% endif %}
+					<a href="?/ban-appeals">{% trans 'Ban appeals' %} ({{ appeals }})</a></li>
+				{% if appeals > 0 %}</strong>{% endif %}
+			</li>
+
 		{% if mod|hasPermission(config.mod.manageusers) %}
 			<li><a href="?/users">{% trans 'Manage users' %}</a></li>
 		{% elseif mod|hasPermission(config.mod.change_password) %}

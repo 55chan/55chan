@@ -1,16 +1,3 @@
-{% for board_posts in posts %}
-	<fieldset>
-		<legend>
-			<a href="?/{{ config.board_path|sprintf(board_posts.board.uri) }}{{ config.file_index }}">
-				{{ config.board_abbreviation|sprintf(board_posts.board.uri) }}
-				 - 
-				 {{ board_posts.board.title|e }}
-			</a>
-		</legend>
-		{{ board_posts.posts|join('<hr>') }}
-	</fieldset>
-{% endfor %}
-
 {% if mod|hasPermission(config.mod.view_notes) %}
 	<fieldset id="notes">
 		<legend>
@@ -80,6 +67,19 @@
 		{% endif %}
 	</fieldset>
 {% endif %}
+
+{% for board_posts in posts %}
+        <fieldset>
+                <legend>
+                        <a href="?/{{ config.board_path|sprintf(board_posts.board.uri) }}{{ config.file_index }}">
+                                {{ config.board_abbreviation|sprintf(board_posts.board.uri) }}
+                                 -
+                                 {{ board_posts.board.title|e }}
+                        </a>
+                </legend>
+                {{ board_posts.posts|join('<hr>') }}
+        </fieldset>
+{% endfor %}
 
 {% if bans|count > 0 and mod|hasPermission(config.mod.view_ban) %}
 	<fieldset id="bans">
