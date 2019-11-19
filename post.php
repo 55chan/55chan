@@ -202,6 +202,10 @@ if (isset($_POST['delete'])) {
 	// Check if banned
 	checkBan($board['uri']);
 
+	if($config['check_dnsbl_bypass']) {
+	   checkBypass();
+	}
+
 	// Check if deletion enabled
 	if (!$config['allow_delete'])
 		error(_('Post deletion is not allowed!'));
@@ -289,6 +293,10 @@ if (isset($_POST['delete'])) {
 	// Check if banned
 	checkBan($board['uri']);
 	
+        if($config['check_dnsbl_bypass']) {
+           checkBypass();
+        }
+
 	if (empty($report))
 		error($config['error']['noreport']);
 	
@@ -389,6 +397,10 @@ if (isset($_POST['delete'])) {
 
 		// Check if banned
 		checkBan($board['uri']);
+
+		if($config['check_dnsbl_bypass']) {
+           	   checkBypass();
+        	}
 
 	// Check for CAPTCHA right after opening the board so the "return" link is in there
 	if ($config['recaptcha']) {

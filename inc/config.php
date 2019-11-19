@@ -223,6 +223,10 @@
 	// Skip checking certain IP addresses against blacklists (for troubleshooting or whatever)
 	$config['dnsbl_exceptions'][] = '127.0.0.1';
 	
+	// Captcha check every 24 hours instead of every post
+	$config['check_dnsbl_bypass'] = false;
+
+
 	// To prevent bump atacks; returns the thread to last position after the last post is deleted. 
 	$config['anti_bump_flood'] = false;
 

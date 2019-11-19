@@ -1786,6 +1786,21 @@ function buildJavascript() {
 	file_write($config['file_script'], $script);
 }
 
+function checkBypass() {
+  global $config;
+  if (!isset($_SERVER['REMOTE_ADDR'])) {
+    return; // Fix your web server configuration
+  }
+
+  $query = prepare("SELECT * FROM ``dnslb_bypass`` WHERE `ip` = ? AND `created` >= now() - INTERVAL 1 DAY;");
+  $query->execute([$_SERVER['REMOTE_ADDR']]);
+  $ary = $query->fetchAll();
+
+  if(!$ary) {
+    error('It seems your dnsbl bypass expired. If you want to keep posting, please, complete the <a href="'.$config['root'].'/dnsbl_bypass.php">captcha</a>.');
+  }
+}
+
 function checkDNSBL() {
 	global $config;
 
