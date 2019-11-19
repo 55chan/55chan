@@ -1,7 +1,7 @@
 <?php
 
 // Installation/upgrade file	
-define('VERSION', '5.1.4');
+define('VERSION', '5.1.5');
 require 'inc/functions.php';
 loadConfig();
 
@@ -635,6 +635,14 @@ if (file_exists($config['has_installed'])) {
 			  	`created_at` int(11),
 			  	PRIMARY KEY (`cookie`,`extra`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;') or error(db_error());
+
+                case '5.1.4':
+                        query('CREATE TABLE IF NOT EXISTS ``dnslb_bypass`` (
+                                `ip` varchar(255) COLLATE utf8_general_ci NOT NULL,
+                                `created` datetime NOT NULL,
+                                `uses` tinyint(3) unsigned NULL
+                                ) ENGINE=InnoDB COLLATE utf8_general_ci;') or error(db_error());
+
 		case false:
 			// TODO: enhance Tinyboard -> vichan upgrade path.
 			query("CREATE TABLE IF NOT EXISTS ``search_queries`` (  `ip` varchar(39) NOT NULL,  `time` int(11) NOT NULL,  `query` text NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=utf8;") or error(db_error());
