@@ -27,6 +27,10 @@ require_once 'inc/polyfill.php';
 if (!extension_loaded('gettext')) {
 	require_once 'inc/lib/gettext/gettext.inc';
 }
+if (file_exists('inc/instance-functions.php')) {
+        require_once 'inc/instance-functions.php';
+}
+
 
 require_once '8chan-captcha/functions.php';
 
@@ -78,10 +82,6 @@ function loadConfig() {
 		$events = Cache::get('events_' . $boardsuffix );
 
 		define_groups();
-
-		if (file_exists('inc/instance-functions.php')) {
-			require_once('inc/instance-functions.php');
-		}
 
 		if ($config['locale'] != $current_locale) {
                 	$current_locale = $config['locale'];
@@ -2259,6 +2259,10 @@ function strip_combining_chars($str) {
 function buildThread($id, $return = false, $mod = false) {
 	global $board, $config, $build_pages;
 	$id = round($id);
+
+	if(!isset($board['dir'])) {
+		$board['dir'] = sprintf($config['board_path'], $board['uri']);
+	}
 
 	if (event('build-thread', $id))
 		return;
