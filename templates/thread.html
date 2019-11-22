@@ -11,7 +11,7 @@
 
 	{% include 'header.html' %}
 
-	{% set meta_subject %}{% if config.thread_subject_in_title and thread.subject %}{{ thread.subject|e }}{% else %}{{ thread.body_nomarkup[:256]|remove_modifiers|e }}{% endif %}{% endset %}
+	<title>{{ board.url }} - {% if config.thread_subject_in_title %}{{ title }}{% else %}{{ board.title|e }}{% endif %}</title>
 
 	<meta name="description" content="{{ board.url }} - {{ board.title|e }} - {{ meta_subject }}" />
 	<meta name="twitter:card" value="summary">

@@ -2297,10 +2297,17 @@ function buildThread($id, $return = false, $mod = false) {
 	
 		$hasnoko50 = $thread->postCount() >= $config['noko50_min'];
 		$antibot = $mod || $return ? false : create_antibot($board['uri'], $id);
+ 
+		if($thread->subject !== '') {
+			$title = $thread->subject;
+		} else {
+			$title = substr(strip_tags($thread->body), 0, 40);
+		}
 
 		$body = Element('thread.html', array(
 			'board' => $board,
 			'thread' => $thread,
+			'title' => $title,
 			'body' => $thread->build(),
 			'config' => $config,
 			'id' => $id,
