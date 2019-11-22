@@ -67,3 +67,4 @@ $(document).ready(function(){
 			$(post).find('div.post.op span.omitted').each(do_expand);
 		}
 	});
+});
