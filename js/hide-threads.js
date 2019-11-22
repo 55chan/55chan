@@ -5,6 +5,7 @@
  * Released under the MIT license
  * Copyright (c) 2013 Michael Save <savetheinternet@tinyboard.org>
  * Copyright (c) 2013-2014 Marcin Łabanowski <marcin@6irc.net>
+ * Copyright (c) 2019 John <admin@55chan.org>
  *
  * Usage:
  *   $config['additional_javascript'][] = 'js/jquery.min.js';
@@ -36,7 +37,7 @@ $(document).ready(function(){
 		}
 	}
 
-	var fields_to_hide = 'div.file,div.post,div.video-container,video,iframe,img:not(.unanimated),canvas,p.fileinfo,a.hide-thread-link,div.new-posts,br';
+	var fields_to_hide = 'div.post,span.replyLink,span.nokoLink,div.video-container,video,iframe,img:not(.unanimated),canvas,p.fileinfo,.hide-thread-link,div.new-posts,br,span.modMenu';
 	
 	var do_hide_threads = function() {
 		var id = $(this).children('p.intro').children('a.post_no:eq(1)').text();
@@ -48,7 +49,7 @@ $(document).ready(function(){
 			hidden_data[board] = {}; // id : timestamp
 		}
 	
-		$('<a class="hide-thread-link" style="float:left;margin-right:5px" href="javascript:void(0)">[–]</a><span> </span>')
+		$('<a class="hide-thread-link" href="javascript:void(0)"><img class="lesss" src="/static/mold.gif" title="Hide thread" alt="[-]"></a>')
 			.insertBefore(thread_container.find(':not(h2,h2 *):first'))
 			.click(function() {
 				hidden_data[board][id] = Math.round(Date.now() / 1000);
@@ -58,11 +59,9 @@ $(document).ready(function(){
 				
 				var hidden_div = thread_container.find('div.post.op > p.intro').clone();
 				hidden_div.addClass('thread-hidden');
-				hidden_div.find('a[href]:not([href$=".html"]),input').remove();
-				hidden_div.html(hidden_div.html().replace(' [] ', ' '));
-				hidden_div.html(hidden_div.html().replace(' [] ', ' '));
+				hidden_div.find('input').remove();
 				
-				$('<a class="unhide-thread-link" style="float:left;margin-right:5px;margin-left:0px;" href="javascript:void(0)">[+]</a><span> </span>')
+				$('<a class="unhide-thread-link" href="javascript:void(0)"><img class="more" src="/static/mold.gif" title="Show thread" alt="[+]"></a>')
 					.insertBefore(hidden_div.find(':first'))
 					.click(function() {
 						delete hidden_data[board][id];
@@ -85,3 +84,4 @@ $(document).ready(function(){
 		do_hide_threads.call($(post).find('div.post.op')[0]);
 	});
 });
+

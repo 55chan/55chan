@@ -254,6 +254,21 @@ div.post.op {
 div.post.op hr {
  border-color:#d9bfb7
 }
+a.hide-thread-link img.lesss,
+a.unhide-thread-link img.more {
+ float:left
+}
+.more {
+ background-image:url(img/icons/m_yotsub.png)
+}
+.lesss {
+ background-image:url(img/icons/l_yotsub.png)
+}
+.more,
+.lesss {
+ margin:0 0 -4px 1px;
+ font-family:monospace
+}
 a.hide-thread-link,
 a.unhide-thread-link {
  float:left;

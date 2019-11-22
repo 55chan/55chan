@@ -65,14 +65,15 @@
 	</div>
 	{% if post.omitted or post.omitted_images %}
 		<span class="omitted">
-			{% if post.omitted %}
+		{% trans %}Click Reply to view.{% endtrans %}
+			{% if post.omitted %}&nbsp;
 				{% trans %}
 					1 post
 				{% plural post.omitted %}
 					{{ count }} posts
 				{% endtrans %}
 				{% if post.omitted_images %}
-					 {% trans %}and{% endtrans %} 
+					 {% trans %}and{% endtrans %}&nbsp;
 				{% endif %}
 			{% endif %}
 			{% if post.omitted_images %}
@@ -81,7 +82,7 @@
 				{% plural post.omitted_images %}
 					{{ count }} image replies
 				{% endtrans %}
-			{% endif %} {% trans %}omitted. Click reply to view.{% endtrans %}
+			{% endif %} {% trans %} omitted. {% endtrans %}
 		</span>
 	{% endif %}
 {% if not index %}
@@ -93,3 +94,4 @@
 {% endfor %}
 <br class="clear"/>{% if hr %}<hr/>{% endif %}
 </div>
+
