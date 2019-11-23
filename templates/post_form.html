@@ -201,9 +201,9 @@
 			<td colspan="2">
 				<ul class="unimportant board-settings">
 				{% if not config.disable_images %}
-					<li>{% trans %}Files bigger than{% trans %} {% if thread %}200x200{% else %}255x255{% endif %} {% trans %}pixels will be resized.{% trans %}</li>
-					<li>{% trans %}Allowed file types:{% trans %} {{ config.allowed_ext|join(', ') }}{% if config.allowed_ext_files %}, {{ config.allowed_ext_files|join(', ') }}{% endif %}.</li>
-					<li>{% trans %}Maximum size per file:{% trans %} {{ config.max_filesize|filesize }}, {{ config.max_height }} x {{ config.max_width }}.</li>
+					<li>{% trans %}Files bigger than{% endtrans %} {% if thread %}200x200{% else %}255x255{% endif %} {% trans %}pixels will be resized.{% endtrans %}</li>
+					<li>{% trans %}Allowed file types:{% endtrans %} {{ config.allowed_ext|join(', ') }}{% if config.allowed_ext_files %}, {{ config.allowed_ext_files|join(', ') }}{% endif %}.</li>
+					<li>{% trans %}Maximum size per file:{% endtrans %} {{ config.max_filesize|filesize }}, {{ config.max_height }} x {{ config.max_width }}.</li>
 				{% endif %}
 				</ul>
 			</td>
