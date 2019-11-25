@@ -7,13 +7,20 @@ About
 
 Requirements
 ------------
-1.	PHP >= 5.4 (we still try to keep compatibility with php 5.3 as much as possible)
-        PHP 7.0 is explicitly supported. PHP 7.2 works as well, but may cause as yet unreported bugs.
+1.	PHP >= 7.0 (PHP 7.2 works as well, but may cause as yet unreported bugs. Currently we're trying to make it to PHP 7.3, then 7.4; older versions are not supported, so make sure to keep updating your system.)
 2.	MySQL/MariaDB server
 3.	[mbstring](http://www.php.net/manual/en/mbstring.installation.php) 
 4.	[PHP GD](http://www.php.net/manual/en/intro.image.php)
 5.	[PHP PDO](http://www.php.net/manual/en/intro.pdo.php)
 6.	A Unix-like OS, preferrably FreeBSD or Linux
+
+Make sure to run the below as root:
+
+```
+apt-get install graphicsmagick gifsicle php7.3-fpm php7.3-cli php7.3-apcu  php7.3-mysql php7.3-gd php7.3-pdo php7.3-mbstring php7.3-fpm 
+
+```
+
 
 We try to make sure 55chan is compatible with all major web servers. 55chan does not include an Apache ```.htaccess``` file nor does it need one.
 
@@ -52,9 +59,8 @@ Upgrade
 To upgrade from any version of Tinyboard or vichan:
 
 Either run ```git pull``` to update your files, if you used git, or
-backup your ```inc/instance-config.php```, replace all your files in place
-(don't remove boards etc.), then put ```inc/instance-config.php``` back and
-finally run ```install.php```.
+backup your ```inc/instance-config.php``` and ```inc/instance-functions.php```, replace all your files in place
+(don't remove boards and instance-config files inside etc.), then put ```inc/instance-config.php``` and ```inc/instance-functions.php``` back and finally run ```install.php```.
 
 To migrate from a Kusaba X board, use http://github.com/vichan-devel/Tinyboard-Migration
 
@@ -62,6 +68,8 @@ Support
 --------
 vichan is still beta software -- there are bound to be bugs. If you find a
 bug, please report it.
+
+I'll always be on #55chan@irc.rizon.net, if you need something, ask the OPs.
 
 CLI tools
 -----------------
