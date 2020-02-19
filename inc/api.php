@@ -21,6 +21,7 @@ class Api {
 			'thread' => 'resto',
 			'subject' => 'sub',
 			'body' => 'com',
+			'body_nomarkup' => 'com_nomarkup',
 			'email' => 'email',
 			'name' => 'name',
 			'trip' => 'trip',
@@ -93,11 +94,9 @@ class Api {
 		$dotPos = strrpos($file->file, '.');
 		$apiPost['ext'] = substr($file->file, $dotPos);
 		$apiPost['tim'] = substr($file->file, 0, $dotPos);
-		if(isset($file->thumb) && $file->thumb == 'spoiler') {
-			$apiPost['spoiler'] = 1;
-		} else {
-			$apiPost['spoiler'] = 0;
-		}
+
+		isset($file->thumb) && $file->thumb == 'spoiler' ? $apiPost['spoiler'] = 1 : $apiPost['spoiler'] = 0;
+
 		if (isset ($file->hash) && $file->hash) {
 			$apiPost['md5'] = base64_encode(hex2bin($file->hash));
 		}
