@@ -77,17 +77,9 @@
                         <a href="https://engine.vichan.net/">vichan</a> + <a href="https://github.com/55chan/55chan">SS</a> {{ config.version }} -
                 <br>Tinyboard Copyright &copy; 2010-2014 Tinyboard Development Group
                 <br><a href="https://engine.vichan.net/">vichan</a> Copyright &copy; 2012-2018 vichan-devel
-                <br><a href="https://github.com/55chan/55chan">SS</a> Copyright &copy; 2019-2019 55chan Administration</p>
+                <br><a href="https://github.com/55chan/55chan">SS</a> Copyright &copy; 2019-2020 55chan Administration</p>
 
 	</footer>
-	<script type="text/javascript">{% raw %}
-		var styles = {
-			{% endraw %}
-			{% for name, uri in config.stylesheets %}{% raw %}'{% endraw %}{{ name|addslashes }}{% raw %}' : '{% endraw %}/stylesheets/{{ uri|addslashes }}{% raw %}',
-			{% endraw %}{% endfor %}{% raw %}
-		}; onready(init);
-	{% endraw %}</script>
-
 	<script type="text/javascript">{% raw %}
 		ready();
 	{% endraw %}</script>
