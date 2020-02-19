@@ -7,7 +7,7 @@ About
 
 Requirements
 ------------
-1.	PHP >= 7.0 (PHP 7.2 works as well, but may cause as yet unreported bugs. Currently we're trying to make it to PHP 7.3, then 7.4; older versions are not supported, so make sure to keep updating your system.)
+1.	PHP >= 7.0 (PHP 7.2 and 7.3 works as well. Currently we're trying to make it to 7.4; older versions are not supported, so make sure to keep updating your system.)
 2.	MySQL/MariaDB server
 3.	[mbstring](http://www.php.net/manual/en/mbstring.installation.php) 
 4.	[PHP GD](http://www.php.net/manual/en/intro.image.php)
@@ -17,7 +17,7 @@ Requirements
 Make sure to run the below as root:
 
 ```
-apt-get install graphicsmagick gifsicle php7.3-fpm php7.3-cli php7.3-apcu  php7.3-mysql php7.3-gd php7.3-pdo php7.3-mbstring php7.3-fpm 
+apt-get install ffmpeg ffprobe graphicsmagick gifsicle php7.3-fpm php7.3-cli php7.3-apcu  php7.3-mysql php7.3-gd php7.3-pdo php7.3-mbstring php7.3-bcmath 
 
 ```
 
