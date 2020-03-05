@@ -522,6 +522,10 @@
 	$config['allow_delete'] = true;
 	// How long after posting should you have to wait before being able to delete that post? (In seconds.)
 	$config['delete_time'] = 10;
+	// Allow users to delete their own threads but only before $config['delete_limit'][0] posts
+	$config['delete_limit'] = false;
+	// Only works with above
+	$config['delete_post_limit'] = 250;
 	// Reply limit (stops bumping thread when this is reached).
 	$config['reply_limit'] = 250;
 
@@ -1162,6 +1166,7 @@
 	$config['error']['fileexists']		= _('That file <a href="%s">already exists</a>!');
 	$config['error']['fileexistsinthread']	= _('That file <a href="%s">already exists</a> in this thread!');
 	$config['error']['delete_too_soon']	= _('You\'ll have to wait another %s before deleting that.');
+	$config['error']['delete_too_late']	= _('You can only delete threads before %d posts!');
 	$config['error']['mime_exploit']	= _('MIME type detection XSS exploit (IE) detected; post discarded.');
 	$config['error']['invalid_embed']	= _('Couldn\'t make sense of the URL of the video you tried to embed.');
 	$config['error']['captcha']		= _('You seem to have mistyped the verification.');
