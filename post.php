@@ -220,10 +220,6 @@ if (isset($_POST['delete'])) {
 		
 		if ($post = $query->fetch(PDO::FETCH_ASSOC)) {
 			$thread = false;
-			if($config['delete_post'] && is_null($post['thread']) && (numPosts($id)['replies'] > $config['delete_post_limit'])) {
-				error(sprintf($config['error']['delete_too_late'], $config['delete_post_limit']));
-			}
-			
 			if ($config['user_moderation'] && $post['thread']) {
 				$thread_query = prepare(sprintf("SELECT `time`,`password` FROM ``posts_%s`` WHERE `id` = :id", $board['uri']));
 				$thread_query->bindValue(':id', $post['thread'], PDO::PARAM_INT);
