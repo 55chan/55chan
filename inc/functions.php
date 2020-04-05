@@ -225,7 +225,9 @@ function loadConfig() {
 			$config['image_bumplocked'] = $config['dir']['static'] . 'sage.gif';
 		if (!isset($config['image_deleted']))
 			$config['image_deleted'] = $config['dir']['static'] . 'deleted.png';
-
+		if(!isset($board['dir'])) {
+			$board['dir'] = sprintf($config['board_path'], $board['uri']);	
+		}
 		if (!isset($config['uri_thumb']))
 			$config['uri_thumb'] = $config['root'] . $board['dir'] . $config['dir']['thumb'];
 		elseif (isset($board['dir']))
