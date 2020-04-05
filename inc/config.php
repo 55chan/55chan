@@ -1348,6 +1348,9 @@
  * ====================
  */
 
+	// Hash IPs
+	$config['hash_masked_ip'] = false;
+
 	// Limit how many bans can be removed via the ban list. Set to false (or zero) for no limit.
 	$config['mod']['unban_limit'] = false;
 
