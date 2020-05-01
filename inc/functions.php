@@ -67,6 +67,8 @@ function loadConfig() {
 	$error = function_exists('error') ? 'error' : 'basic_error_function_because_the_other_isnt_loaded_yet';
 
 	$boardsuffix = isset($board['uri']) ? $board['uri'] : '';
+	// I know, this is terrible
+	$board['uri'] = isset($board['uri']) ? $board['uri'] : '';
 
 	if (!isset($_SERVER['REMOTE_ADDR']))
 		$_SERVER['REMOTE_ADDR'] = '0.0.0.0';
