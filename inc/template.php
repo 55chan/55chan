@@ -24,7 +24,7 @@ function load_twig() {
 		'cache' => $config['twig_cache'] ? "{$config['dir']['template']}/cache" : false,
 		'debug' => $config['debug']
 	));
-	$twig->addExtension(new Twig\Extensions\Extension\Tinyboard()); // Everything seems to be ok here
+	$twig->addExtension(new Twig_Extensions_Extension_Tinyboard()); // Everything seems to be ok here
 	$twig->addExtension(new Twig\Extensions\I18nExtension());
 }
 

@@ -1,10 +1,6 @@
 <?php
 
-namespace Twig\Extensions\Extension;
-
-use Twig\Extension\AbstractExtension;
-
-class Tinyboard extends AbstractExtension
+class Twig_Extensions_Extension_Tinyboard extends \Twig\Extension\AbstractExtension
 {
 	/**
 	* Returns a list of filters to add to the existing list.
