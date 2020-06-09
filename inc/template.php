@@ -11,24 +11,21 @@ $twig = false;
 function load_twig() {
 	global $twig, $config;
 	
-	require 'lib/Twig/Autoloader.php';
-	Twig_Autoloader::register();
+	require_once "vendor/autoload.php";
+	require_once "twig_extends/Tinyboard.php";
+	require_once "twig_extends/TransNode.php";
+	require_once "twig_extends/TransTokenParser.php";
+	require_once "twig_extends/I18nExtension.php";
 
-	Twig_Autoloader::autoload('Twig_Extensions_Node_Trans');
-	Twig_Autoloader::autoload('Twig_Extensions_TokenParser_Trans');
-	Twig_Autoloader::autoload('Twig_Extensions_Extension_I18n');
-	Twig_Autoloader::autoload('Twig_Extensions_Extension_Tinyboard');
-	
-	$loader = new Twig_Loader_Filesystem($config['dir']['template']);
+	$loader = new \Twig\Loader\FilesystemLoader($config['dir']['template']);
 	$loader->setPaths($config['dir']['template']);
-	$twig = new Twig_Environment($loader, array(
+	$twig = new \Twig\Environment($loader, array(
 		'autoescape' => false,
-		'cache' => is_writable('templates') || (is_dir('templates/cache') && is_writable('templates/cache')) ?
-			"{$config['dir']['template']}/cache" : false,
+		'cache' => $config['twig_cache'] ? "{$config['dir']['template']}/cache" : false,
 		'debug' => $config['debug']
 	));
-	$twig->addExtension(new Twig_Extensions_Extension_Tinyboard());
-	$twig->addExtension(new Twig_Extensions_Extension_I18n());
+	$twig->addExtension(new Twig\Extensions\Extension\Tinyboard()); // Everything seems to be ok here
+	$twig->addExtension(new Twig\Extensions\I18nExtension());
 }
 
 function Element($templateFile, array $options) {
@@ -50,7 +47,7 @@ function Element($templateFile, array $options) {
 			unset($_debug['start']);
 			unset($_debug['start_debug']);
 		}
-		if ($config['try_smarter'] && isset($build_pages) && !empty($build_pages))
+		if ($config['try_smarter'] && isset($build_pages) && !empty($build_pages)) {
 			$_debug['build_pages'] = $build_pages;
 		$_debug['included'] = get_included_files();
 		$_debug['memory'] = round(memory_get_usage(true) / (1024 * 1024), 2) . ' MiB';
@@ -60,8 +57,9 @@ function Element($templateFile, array $options) {
 			'<h3>Debug</h3><pre style="white-space: pre-wrap;font-size: 10px;">' .
 				str_replace("\n", '<br/>', utf8tohtml(print_r($_debug, true))) .
 			'</pre>';
-	}
+		}
 	
+	}
 	// Read the template file
 	if (@file_get_contents("{$config['dir']['template']}/${templateFile}")) {
 		$body = $twig->render($templateFile, $options);
@@ -75,4 +73,3 @@ function Element($templateFile, array $options) {
 		throw new Exception("Template file '${templateFile}' does not exist or is empty in '{$config['dir']['template']}'!");
 	}
 }
-
