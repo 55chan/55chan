@@ -56,9 +56,12 @@
 	// There is really no reason for you to ever need to change this.
 	$config['redirect_http'] = 303;
 
+	// Public directory
+	$config['public'] = "public/";
+
 	// A tiny text file in the main directory indicating that the script has been ran and the board(s) have
 	// been generated. This keeps the script from querying the database and causing strain when not needed.
-	$config['has_installed'] = '.installed';
+	$config['has_installed'] = $config['public'].'.installed';
 
 	// Use syslog() for logging all error messages and unauthorized login attempts.
 	$config['syslog'] = false;
@@ -142,6 +145,15 @@
 	// If you have any lambdas/includes present in your config, you should move them to instance-functions.php
 	// (this file will be explicitly loaded during cache hit, but not during cache miss).
 	$config['cache_config'] = false;
+
+	// ANOTHER ONE EXPERIMENTAL: Should we cache posts?
+	// This put all database posts in memory cache, I have no ideia how it'll turn out, but I'd like to make 
+	// it like a certain imageboard
+	// WARNING: $config['cache']['enabled'] must be either memcached or redis, else it won't work
+	$config['cached_posts']['enabled'] = false; 
+	
+	// Delay in seconds 
+	$config['cached_posts']['delay'] = 0;
 
 	// Define a lock driver.
 	$config['lock']['enabled'] = 'fs';
@@ -318,14 +330,13 @@
 
 	// Enable custom captcha provider
 	$config['captcha']['enabled'] = false;
+  
+	// Custom CAPTCHA provider general settings
+	// Captcha expiration:
+	$config['captcha']['expires_in'] = 10 * 60;
 
-
-        // Custom CAPTCHA provider general settings
-        // Captcha expiration:
-        $config['captcha']['expires_in'] = 10 * 60;
-
-        // Captcha length:
-        $config['captcha']['length'] = 6;
+	// Captcha length:
+	$config['captcha']['length'] = 6;
 
 	//New thread captcha
  	//Require solving a captcha to post a thread. 
@@ -629,7 +640,7 @@
 	
 	// List of user_flag the user can choose. Flags must be placed in the directory set by $config['uri_flags']
 	$config['user_flags'] = array();
-	/* example: 
+	/* example: 
 	$config['user_flags'] = array (
 		'nz' => 'Nazi',
 		'cm' => 'Communist',
@@ -1225,7 +1236,9 @@
 	$config['file_page50_slug'] = '%d-%s+50.html';
 	$config['file_mod'] = 'mod.php';
 	$config['file_post'] = 'post.php';
-	$config['file_script'] = 'main.js';
+	// if you want to change something here, check $config['url_javascript'] as well
+	$config['main_js'] = "main.js";
+	$config['file_script'] = $config['public'] . $config['main_js'];
 
 	// Board directory, followed by a forward-slash (/).
 	$config['board_path'] = '%s/';
@@ -1238,12 +1251,14 @@
 	// possible. This can either be a directory or a URL. Defaults to $config['root'] . 'static/'.
 	// $config['dir']['static'] = 'http://static.example.org/';
 
+	// Use twig cache by default, only set this to false in development, since it'll pretty much decrease performance
+	$config['twig_cache'] = true;
 	// Where to store the .html templates. This folder and the template files must exist.
-	$config['dir']['template'] = getcwd() . '/templates';
+	$config['dir']['template'] = 'inc/templates';
 	// Location of Tinyboard "themes".
-	$config['dir']['themes'] = getcwd() . '/templates/themes';
+	$config['dir']['themes'] = 'inc/templates/themes';
 	// Same as above, but a URI (accessable by web interface).
-	$config['dir']['themes_uri'] = 'templates/themes';
+	$config['dir']['themes_uri'] = 'inc/templates/themes';
 	// Home directory. Used by themes.
 	$config['dir']['home'] = '';
 
@@ -1266,6 +1281,9 @@
 	// across multiple servers or hostnames.
 	// $config['url_stylesheet'] = 'http://static.example.org/style.css'; // main/base stylesheet
 	// $config['url_javascript'] = 'http://static.example.org/main.js';
+
+	// Since we are using a public dir now, it'd be wise to set this by default
+	$config['url_javascript'] = $config['main_js'];
 
 	// Website favicon.
 	// $config['url_favicon'] = '/favicon.gif';
@@ -1502,6 +1520,7 @@
 
 	/* Post Controls */
 	// View IP addresses
+	$config['mod']['show_ip_less'] = JANITOR;
 	$config['mod']['show_ip'] = MOD;
 	// Delete a post
 	$config['mod']['delete'] = JANITOR;

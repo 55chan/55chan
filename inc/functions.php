@@ -1,5 +1,4 @@
 <?php
-
 /*
  *  Copyright (c) 2010-2014 Tinyboard Development Group
  */
@@ -10,9 +9,12 @@ if (realpath($_SERVER['SCRIPT_FILENAME']) == str_replace('\\', '/', __FILE__)) {
 }
 
 define('TINYBOARD', null);
-
 $microtime_start = microtime(true);
 
+if (!file_exists('vendor/autoload.php')) {
+	die("You need to run <code>composer install</code> first.");
+}
+require_once "vendor/autoload.php";
 require_once 'inc/display.php';
 require_once 'inc/template.php';
 require_once 'inc/database.php';
@@ -22,20 +24,15 @@ require_once 'inc/mod/auth.php';
 require_once 'inc/lock.php';
 require_once 'inc/queue.php';
 require_once 'inc/polyfill.php';
-@include_once 'inc/lib/parsedown/Parsedown.php'; // fail silently, this isn't a critical piece of code
 
-if (!extension_loaded('gettext')) {
-	require_once 'inc/lib/gettext/gettext.inc';
-}
 if (file_exists('inc/instance-functions.php')) {
-        require_once 'inc/instance-functions.php';
+	require_once 'inc/instance-functions.php';
 }
-
-
-require_once '8chan-captcha/functions.php';
 
 // the user is not currently logged in as a moderator
 $mod = false;
+
+
 
 register_shutdown_function('fatal_error_handler');
 mb_internal_encoding('UTF-8');
@@ -67,8 +64,8 @@ function loadConfig() {
 	$error = function_exists('error') ? 'error' : 'basic_error_function_because_the_other_isnt_loaded_yet';
 
 	$boardsuffix = isset($board['uri']) ? $board['uri'] : '';
-	// I know, this is terrible
-	$board['uri'] = isset($board['uri']) ? $board['uri'] : '';
+	// Yeah, I know, but it's better than changing a lot of shit
+	$board['uri'] = $boardsuffix;
 
 	if (!isset($_SERVER['REMOTE_ADDR']))
 		$_SERVER['REMOTE_ADDR'] = '0.0.0.0';
@@ -88,9 +85,8 @@ function loadConfig() {
 		if ($config['locale'] != $current_locale) {
                 	$current_locale = $config['locale'];
                 	init_locale($config['locale'], $error);
-        	}
-	}
-	else {
+		}
+	} else {
 		$config = array();
 
 		reset_events();	
@@ -138,14 +134,13 @@ function loadConfig() {
 
 		if (file_exists($fn = 'tmp/cache/locale_' . $boardsuffix ) ) {
 			$config['locale'] = @file_get_contents($fn);
-		}
-		else {
+		} else {
 			$config['locale'] = 'en';
 
 			$configstr = file_get_contents('inc/instance-config.php');
 
-			if (isset($board['dir']) && file_exists($board['dir'] . '/config.php')) {
-				$configstr .= file_get_contents($board['dir'] . '/config.php');
+			if (isset($board['public_dir']) && file_exists($board['public_dir'] . '/config.php')) {
+				$configstr .= file_get_contents($board['public_dir'] . '/config.php');
 			}
 			$matches = array();
 			preg_match_all('/[^\/#*]\$config\s*\[\s*[\'"]locale[\'"]\s*\]\s*=\s*([\'"])(.*?)\1/', $configstr, $matches);
@@ -166,8 +161,8 @@ function loadConfig() {
 
 		require 'inc/instance-config.php';
 
-		if (isset($board['dir']) && file_exists($board['dir'] . '/config.php')) {
-			require $board['dir'] . '/config.php';
+		if (isset($board['public_dir']) && file_exists($board['public_dir'] . '/config.php')) {
+			require $board['public_dir'] . '/config.php';
 		}
 
 		if ($config['locale'] != $current_locale) {
@@ -227,9 +222,10 @@ function loadConfig() {
 			$config['image_bumplocked'] = $config['dir']['static'] . 'sage.gif';
 		if (!isset($config['image_deleted']))
 			$config['image_deleted'] = $config['dir']['static'] . 'deleted.png';
-		if(!isset($board['dir'])) {
+		if(!isset($board['dir']))
 			$board['dir'] = sprintf($config['board_path'], $board['uri']);	
-		}
+		if(!isset($board['public_dir']))
+			$board['public_dir'] = $config['public'] . sprintf($config['board_path'], $board['uri']);
 		if (!isset($config['uri_thumb']))
 			$config['uri_thumb'] = $config['root'] . $board['dir'] . $config['dir']['thumb'];
 		elseif (isset($board['dir']))
@@ -257,7 +253,7 @@ function loadConfig() {
 			$config['user_flags'] = array();
 
 		if (!isset($__version))
-			$__version = file_exists('.installed') ? trim(file_get_contents('.installed')) : false;
+			$__version = file_exists('public/.installed') ? trim(file_get_contents('public/.installed')) : false;
 		$config['version'] = $__version;
 
 		if ($config['allow_roll'])
@@ -527,35 +523,34 @@ function mb_substr_replace($string, $replacement, $start, $length) {
 	return mb_substr($string, 0, $start) . $replacement . mb_substr($string, $start + $length);
 }
 
-function setupBoard($array) {
+function setupBoard(array $array) {
 	global $board, $config;
-
-	$board = array(
-		'uri' => $array['uri'],
+	
+	$board = [
+		'uri' => $array['uri'], // Tem que dar um jeito nesse espaguete todo
+		'dir' => sprintf($config['board_path'], $array['uri']),
+		'public_dir' => $config['public'] . sprintf($config['board_path'], $array['uri']),
 		'title' => $array['title'],
+		'name' => $array['title'],
 		'subtitle' => $array['subtitle'],
-		#'indexed' => $array['indexed'],
-	);
-
-	// older versions
-	$board['name'] = &$board['title'];
-
-	$board['dir'] = sprintf($config['board_path'], $board['uri']);
-	$board['url'] = sprintf($config['board_abbreviation'], $board['uri']);
+		'url' => sprintf($config['board_abbreviation'], $array['uri'])
+	];
 
 	loadConfig();
 
-	if (!file_exists($board['dir']))
-		@mkdir($board['dir'], 0777) or error("Couldn't create " . $board['dir'] . ". Check permissions.", true);
-	if (!file_exists($board['dir'] . $config['dir']['img']))
-		@mkdir($board['dir'] . $config['dir']['img'], 0777)
-			or error("Couldn't create " . $board['dir'] . $config['dir']['img'] . ". Check permissions.", true);
-	if (!file_exists($board['dir'] . $config['dir']['thumb']))
-		@mkdir($board['dir'] . $config['dir']['thumb'], 0777)
-			or error("Couldn't create " . $board['dir'] . $config['dir']['img'] . ". Check permissions.", true);
-	if (!file_exists($board['dir'] . $config['dir']['res']))
-		@mkdir($board['dir'] . $config['dir']['res'], 0777)
-			or error("Couldn't create " . $board['dir'] . $config['dir']['img'] . ". Check permissions.", true);
+	if(!isset($board['public_dir']))
+		die("\$board['public_dir'] is not set\n");
+	if (!file_exists($board['public_dir']))
+		@mkdir($board['public_dir'], 0777) or error("Couldn't create " . $board['public_dir'] . ". Check permissions.", true);
+	if (!file_exists($board['public_dir'] . $config['dir']['img']))
+		@mkdir($board['public_dir'] . $config['dir']['img'], 0777)
+			or error("Couldn't create " . $board['public_dir'] . $config['dir']['img'] . ". Check permissions.", true);
+	if (!file_exists($board['public_dir'] . $config['dir']['thumb']))
+		@mkdir($board['public_dir'] . $config['dir']['thumb'], 0777)
+			or error("Couldn't create " . $board['public_dir'] . $config['dir']['img'] . ". Check permissions.", true);
+	if (!file_exists($board['public_dir'] . $config['dir']['res']))
+		@mkdir($board['public_dir'] . $config['dir']['res'], 0777)
+			or error("Couldn't create " . $board['public_dir'] . $config['dir']['img'] . ". Check permissions.", true);
 }
 
 function openBoard($uri) {
@@ -1165,12 +1160,12 @@ function deleteFile($id, $remove_entirely_if_already=true, $file=null) {
 			if (($file !== false && $i == $file) || $file === null) {
 				// Delete thumbnail
 				if (isset ($f->thumb) && $f->thumb) {
-					file_unlink($board['dir'] . $config['dir']['thumb'] . $f->thumb);
+					file_unlink($board['public_dir'] . $config['dir']['thumb'] . $f->thumb);
 					unset($files[$i]->thumb);
 				}
 
 				// Delete file
-				file_unlink($board['dir'] . $config['dir']['img'] . $f->file);
+				file_unlink($board['public_dir'] . $config['dir']['img'] . $f->file);
 				$files[$i]->file = 'deleted';
 			}
 		}
@@ -1237,9 +1232,9 @@ function deletePost($id, $error_if_doesnt_exist=true, $rebuild_after=true) {
 		$thread_id = $post['thread'];
 		if (!$post['thread']) {
 			// Delete thread HTML page
-			file_unlink($board['dir'] . $config['dir']['res'] . link_for($post) );
-			file_unlink($board['dir'] . $config['dir']['res'] . link_for($post, true) ); // noko50
-			file_unlink($board['dir'] . $config['dir']['res'] . sprintf('%d.json', $post['id']));
+			file_unlink($board['public_dir'] . $config['dir']['res'] . link_for($post) );
+			file_unlink($board['public_dir'] . $config['dir']['res'] . link_for($post, true) ); // noko50
+			file_unlink($board['public_dir'] . $config['dir']['res'] . sprintf('%d.json', $post['id']));
 
 			$antispam_query = prepare('DELETE FROM ``antispam`` WHERE `board` = :board AND `thread` = :thread');
 			$antispam_query->bindValue(':board', $board['uri']);
@@ -1253,8 +1248,8 @@ function deletePost($id, $error_if_doesnt_exist=true, $rebuild_after=true) {
 			// Delete file
 			foreach (json_decode($post['files']) as $i => $f) {
 				if ($f->file !== 'deleted') {
-					file_unlink($board['dir'] . $config['dir']['img'] . $f->file);
-					file_unlink($board['dir'] . $config['dir']['thumb'] . $f->thumb);
+					file_unlink($board['public_dir'] . $config['dir']['img'] . $f->file);
+					file_unlink($board['public_dir'] . $config['dir']['thumb'] . $f->thumb);
 				}
 			}
 		}
@@ -1670,8 +1665,8 @@ function buildIndex($global_api = "yes") {
 	}
 
 	for ($page = 1; $page <= $config['max_pages']; $page++) {
-		$filename = $board['dir'] . ($page == 1 ? $config['file_index'] : sprintf($config['file_page'], $page));
-		$jsonFilename = $board['dir'] . ($page - 1) . '.json'; // pages should start from 0
+		$filename = $board['public_dir'] . ($page == 1 ? $config['file_index'] : sprintf($config['file_page'], $page));
+		$jsonFilename = $board['public_dir'] . ($page - 1) . '.json'; // pages should start from 0
 
 		$wont_build_this_page = $config['try_smarter'] && isset($build_pages) && !empty($build_pages) && !in_array($page, $build_pages);
 
@@ -1722,11 +1717,11 @@ function buildIndex($global_api = "yes") {
 	// $action is an action for our last page
 	if (($catalog_api_action == 'rebuild' || $action == 'rebuild' || $action == 'delete') && $page < $config['max_pages']) {
 		for (;$page<=$config['max_pages'];$page++) {
-			$filename = $board['dir'] . ($page==1 ? $config['file_index'] : sprintf($config['file_page'], $page));
+			$filename = $board['public_dir'] . ($page==1 ? $config['file_index'] : sprintf($config['file_page'], $page));
 			file_unlink($filename);
 
 			if ($config['api']['enabled']) {
-				$jsonFilename = $board['dir'] . ($page - 1) . '.json';
+				$jsonFilename = $board['public_dir'] . ($page - 1) . '.json';
 				file_unlink($jsonFilename);
 			}
 		}
@@ -1735,18 +1730,18 @@ function buildIndex($global_api = "yes") {
 	// json api catalog
 	if ($config['api']['enabled'] && $global_api != "skip") {
 		if ($catalog_api_action == 'delete') {
-			$jsonFilename = $board['dir'] . 'catalog.json';
+			$jsonFilename = $board['public_dir'] . 'catalog.json';
 			file_unlink($jsonFilename);
-			$jsonFilename = $board['dir'] . 'threads.json';
+			$jsonFilename = $board['public_dir'] . 'threads.json';
 			file_unlink($jsonFilename);
 		}
 		elseif ($catalog_api_action == 'rebuild') {
 			$json = json_encode($api->translateCatalog($catalog));
-			$jsonFilename = $board['dir'] . 'catalog.json';
+			$jsonFilename = $board['public_dir'] . 'catalog.json';
 			file_write($jsonFilename, $json);
 
 			$json = json_encode($api->translateCatalog($catalog, true));
-			$jsonFilename = $board['dir'] . 'threads.json';
+			$jsonFilename = $board['public_dir'] . 'threads.json';
 			file_write($jsonFilename, $json);
 		}
 	}
@@ -1778,7 +1773,7 @@ function buildJavascript() {
 
 	if ($config['additional_javascript_compile']) {
 		foreach ($config['additional_javascript'] as $file) {
-			$script .= file_get_contents($file);
+			$script .= file_get_contents("public/" . $file);
 		}
 	}
 
@@ -1786,7 +1781,6 @@ function buildJavascript() {
 		require_once 'inc/lib/minify/JSMin.php';		
 		$script = JSMin::minify($script);
 	}
-
 	file_write($config['file_script'], $script);
 }
 
@@ -2264,9 +2258,9 @@ function buildThread($id, $return = false, $mod = false) {
 	global $board, $config, $build_pages;
 	$id = round($id);
 
-	if(!isset($board['dir'])) {
-		$board['dir'] = sprintf($config['board_path'], $board['uri']);
-	}
+	//if(!isset($board['dir'])) {
+	//	$board['dir'] = sprintf($config['board_path'], $board['uri']);
+	//}
 
 	if (event('build-thread', $id))
 		return;
@@ -2327,29 +2321,28 @@ function buildThread($id, $return = false, $mod = false) {
 		if ($config['api']['enabled'] && !$mod) {
 			$api = new Api();
 			$json = json_encode($api->translateThread($thread));
-			$jsonFilename = $board['dir'] . $config['dir']['res'] . $id . '.json';
+			$jsonFilename = $board['public_dir'] . $config['dir']['res'] . $id . '.json';
 			file_write($jsonFilename, $json);
 		}
-	}
-	elseif($action == 'delete') {
-		$jsonFilename = $board['dir'] . $config['dir']['res'] . $id . '.json';
+	} elseif($action == 'delete') {
+		$jsonFilename = $board['public_dir'] . $config['dir']['res'] . $id . '.json';
 		file_unlink($jsonFilename);
 	}
 
 	if ($action == 'delete' && !$return && !$mod) {
-		$noko50fn = $board['dir'] . $config['dir']['res'] . link_for(array('id' => $id), true);
+		$noko50fn = $board['public_dir'] . $config['dir']['res'] . link_for(array('id' => $id), true);
 		file_unlink($noko50fn);
 
-		file_unlink($board['dir'] . $config['dir']['res'] . link_for(array('id' => $id)));
+		file_unlink($board['public_dir'] . $config['dir']['res'] . link_for(array('id' => $id)));
 	} elseif ($return) {
 		return $body;
 	} elseif ($action == 'rebuild') {
-		$noko50fn = $board['dir'] . $config['dir']['res'] . link_for($thread, true);
+		$noko50fn = $board['public_dir'] . $config['dir']['res'] . link_for($thread, true);
 		if ($hasnoko50 || file_exists($noko50fn)) {
 			buildThread50($id, $return, $mod, $thread, $antibot);
 		}
 
-		file_write($board['dir'] . $config['dir']['res'] . link_for($thread), $body);
+		file_write($board['public_dir'] . $config['dir']['res'] . link_for($thread), $body);
 	}
 }
 
@@ -2429,7 +2422,7 @@ function buildThread50($id, $return = false, $mod = false, $thread = null, $anti
 	if ($return) {
 		return $body;
 	} else {
-		file_write($board['dir'] . $config['dir']['res'] . link_for($thread, true), $body);
+		file_write($board['public_dir'] . $config['dir']['res'] . link_for($thread, true), $body);
 	}
 }
 
@@ -2883,4 +2876,21 @@ function strategy_first($fun, $array) {
 	case 'sb_ukko':
 		return array('defer');
 	}
+}
+// I hate undocumented libraries so goddamn much
+function ___($error) {
+    global $config;
+    // Starts .po loader instance
+    $loader = new Gettext\Loader\PoLoader();
+    // Load locales
+    $translations = $loader->loadFile("inc/locale/{$config['locale']}/LC_MESSAGES/tinyboard.po");
+    
+    // Find for translation
+    $text = $translations->find(null, $error); 
+
+    if(!$text) { // If it doesn't exists, output just the error
+        return $error;
+    } else {
+        return $text->getTranslation(); // else, translate this shit
+    }
 }
