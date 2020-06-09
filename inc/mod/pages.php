@@ -2150,7 +2150,8 @@ function mod_rebuild() {
 			
 			$log[] = 'Clearing template cache';
 			load_twig();
-			$twig->clearCacheFiles();
+			$_twig = clearTwigCache($config);
+			$_twig->clear_cache();
 		}
 		
 		if (isset($_POST['rebuild_themes'])) {

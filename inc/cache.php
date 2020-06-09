@@ -170,4 +170,22 @@ class Cache {
 		return false;
 	}
 }
+class clearTwigCache {
+	private $config;
+	
+	public function __construct($_config) {
+		$this->config = $_config;
+	}
+	private function get_files() {
+		$files = explode("\n", shell_exec("ls {$this->config['dir']['template']}/cache"));
+		array_pop($files);
+			return $files;
+	}
+	public function clear_cache() {
+		$files = self::get_files();
+		foreach($files as $file) {
+				shell_exec("rm -r {$this->config['dir']['template']}/cache/$file");;
+		}
+	}
+}
 
