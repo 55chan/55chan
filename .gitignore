@@ -1,11 +1,26 @@
+# other stuff
+/vendor
+# /inc/templates/cache
+/inc/instance-config.php
+
+# tmp filesystem
+/tmp/cache/*
+/tmp/locks/*
+!/tmp/cache/.gitkeep
+!/tmp/locks/.gitkeep
+
+#vichan custom
+favicon.ico
+/public/static/spoiler.png
+
 # static html and json
-/*/*.html
-/*/*.json
-/*/res
-/*/src
-/*/thumb
-/*/config.php
-/*.html
+/public/*/*.html
+/public/*/*.json
+/public/*/res
+/public/*/src
+/public/*/thumb
+/public/*/config.php
+/public/*.html
 
 # include some files though
 !/templates/*.html
@@ -18,13 +33,11 @@
 /inc/instance-config.php
 
 # .installed
-/.installed
+/public/.installed
 
 # script file
-/main.js
+/public/main.js
 
-# templates cache
-/templates/cache
 
 # other stuff
 .DS_Store
@@ -37,13 +50,3 @@ Thumbs.db
 *.rej
 *.orig
 *~
-
-# tmp filesystem
-/tmp/cache/*
-/tmp/locks/*
-!/tmp/cache/.gitkeep
-!/tmp/locks/.gitkeep
-
-#vichan custom
-favicon.ico
-/static/spoiler.png
