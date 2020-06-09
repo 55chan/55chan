@@ -1,4 +1,3 @@
-{% raw %}
 
 /* gettext-compatible _ function, example of usage:
  *
@@ -109,11 +108,10 @@ function alert(a, do_confirm, confirm_ok_action, confirm_cancel_action) {
 var saved = {};
 
 
-var selectedstyle = '{% endraw %}{{ config.default_stylesheet.0|addslashes }}{% raw %}';
+var selectedstyle = '{{ config.default_stylesheet.0|addslashes }}';
 var styles = {
-	{% endraw %}
-	{% for stylesheet in stylesheets %}{% raw %}'{% endraw %}{{ stylesheet.name|addslashes }}{% raw %}' : '{% endraw %}{{ stylesheet.uri|addslashes }}{% raw %}',
-	{% endraw %}{% endfor %}{% raw %}
+	{% for stylesheet in stylesheets %}'{{ stylesheet.name|addslashes }}' : '{{ stylesheet.uri|addslashes }}',
+	{% endfor %}
 };
 
 if (typeof board_name === 'undefined') {
@@ -121,16 +119,14 @@ if (typeof board_name === 'undefined') {
 }
 
 function changeStyle(styleName, link) {
-	{% endraw %}
-	{% if config.stylesheets_board %}{% raw %}
+	{% if config.stylesheets_board %}
 		if (board_name) {
 			stylesheet_choices[board_name] = styleName;
 			localStorage.board_stylesheets = JSON.stringify(stylesheet_choices);
 		}
-	{% endraw %}{% else %}
+	{% else %}
 		localStorage.stylesheet = styleName;
 	{% endif %}
-	{% raw %}
 	
 	if (!document.getElementById('stylesheet')) {
 		var s = document.createElement('link');
@@ -160,9 +156,7 @@ function changeStyle(styleName, link) {
 }
 
 
-{% endraw %}
 {% if config.stylesheets_board %}
-	{% raw %}
 	
 	if (!localStorage.board_stylesheets) {
 		localStorage.board_stylesheets = '{}';
@@ -177,9 +171,7 @@ function changeStyle(styleName, link) {
 			}
 		}
 	}
-	{% endraw%}
 {% else %}
-	{% raw %}
 	if (localStorage.stylesheet) {
 		for (var styleName in styles) {
 			if (styleName == localStorage.stylesheet) {
@@ -188,9 +180,7 @@ function changeStyle(styleName, link) {
 			}
 		}
 	}
-	{% endraw %}
 {% endif %}
-{% raw %}
 
 function init_stylechooser() {
 	var newElement = document.createElement('div');
@@ -243,7 +233,7 @@ function highlightReply(id) {
 
 function generatePassword() {
 	var pass = '';
-	var chars = '{% endraw %}{{ config.genpassword_chars }}{% raw %}';
+	var chars = '{{ config.genpassword_chars }}';
 	for (var i = 0; i < 8; i++) {
 		var rnd = Math.floor(Math.random() * chars.length);
 		pass += chars.substring(rnd, rnd + 1);
@@ -323,15 +313,15 @@ function rememberStuff() {
 		
 		if (sessionStorage.body) {
 			var saved = JSON.parse(sessionStorage.body);
-			if (get_cookie('{% endraw %}{{ config.cookies.js }}{% raw %}')) {
+			if (get_cookie('{{ config.cookies.js }}')) {
 				// Remove successful posts
-				var successful = JSON.parse(get_cookie('{% endraw %}{{ config.cookies.js }}{% raw %}'));
+				var successful = JSON.parse(get_cookie('{{ config.cookies.js }}'));
 				for (var url in successful) {
 					saved[url] = null;
 				}
 				sessionStorage.body = JSON.stringify(saved);
 				
-				document.cookie = '{% endraw %}{{ config.cookies.js }}{% raw %}={};expires=0;path=/;';
+				document.cookie = '{{ config.cookies.js }}={};expires=0;path=/;';
 			}
 			if (saved[document.location]) {
 				document.forms.post.body.value = saved[document.location];
@@ -359,13 +349,11 @@ var script_settings = function(script_name) {
 function init() {
 	init_stylechooser();
 
-	{% endraw %}	
 	{% if config.allow_delete %}
 	if (document.forms.postcontrols) {
 		document.forms.postcontrols.password.value = localStorage.password;
 	}
 	{% endif %}
-	{% raw %}
 	
 	if (window.location.hash.indexOf('q') != 1 && window.location.hash.substring(1))
 		highlightReply(window.location.hash.substring(1));
@@ -386,16 +374,15 @@ function ready() {
 	}
 }
 
-{% endraw %}
 
 var post_date = "{{ config.post_date }}";
 var max_images = {{ config.max_images }};
 
 onready(init);
 
-{% if config.google_analytics %}{% raw %}
+{% if config.google_analytics %}
 
-var _gaq = _gaq || [];_gaq.push(['_setAccount', '{% endraw %}{{ config.google_analytics }}{% raw %}']);{% endraw %}{% if config.google_analytics_domain %}{% raw %}_gaq.push(['_setDomainName', '{% endraw %}{{ config.google_analytics_domain }}{% raw %}']){% endraw %}{% endif %}{% if not config.google_analytics_domain %}{% raw %}_gaq.push(['_setDomainName', 'none']){% endraw %}{% endif %}{% raw %};_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();{% endraw %}{% endif %}
+var _gaq = _gaq || [];_gaq.push(['_setAccount', '{{ config.google_analytics }}']);{% if config.google_analytics_domain %}_gaq.push(['_setDomainName', '{{ config.google_analytics_domain }}']){% endif %}{% if not config.google_analytics_domain %}_gaq.push(['_setDomainName', 'none']){% endif %};_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();{% endif %}
 
 {% if config.statcounter_project and config.statcounter_security %}
 var sc = document.createElement('script');

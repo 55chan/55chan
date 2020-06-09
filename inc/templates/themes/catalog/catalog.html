@@ -1,4 +1,4 @@
-{% filter remove_whitespace %}
+{% apply remove_whitespace %}
 <!doctype html>
 <html>
 <head>
@@ -24,7 +24,7 @@
                 <option value="reply:desc">{% trans 'Reply count' %}</option>
                 <option value="random:desc">{% trans 'Random' %}</option>
         </select>
- 
+
         <span>{% trans 'Image size' %}: </span>
         <select id="image_size" style="display: inline-block">
                 <option value="vsmall">{% trans 'Very small' %}</option>
@@ -42,12 +42,12 @@
 				 data-sticky="{% if post.sticky %}true{% else %}false{% endif %}"
 				 data-locked="{% if post.locked %}true{% else %}false{% endif %}"
 			>
-                                <div class="thread grid-li grid-size-small">  
-                                        <a href="{{post.link}}">  
+                                <div class="thread grid-li grid-size-small">
+                                        <a href="{{post.link}}">
 						{% if post.youtube %}
-							<img src="//img.youtube.com/vi/{{ post.youtube }}/0.jpg" 
+							<img src="//img.youtube.com/vi/{{ post.youtube }}/0.jpg"
 						{% else %}
-							<img src="{{post.file}}" 
+							<img src="{{post.file}}"
 						{% endif %}
                                                  id="img-{{ post.id }}" data-subject="{% if post.subject %}{{ post.subject|e }}{% endif %}" data-name="{{ post.name|e }}" data-muhdifference="{{ post.muhdifference }}" class="{{post.board}} thread-image" title="{{post.bump|date('%b %d %H:%M')}}">
                                         </a>
@@ -70,7 +70,7 @@
                 {% endfor %}
                 </div>
         </div>
-	
+
 	<hr/>
 	<footer>
                 <p class="unimportant" style="margin-top:20px;text-align:center;">- Tinyboard +
@@ -85,5 +85,5 @@
 	{% endraw %}</script>
 </body>
 </html>
-{% endfilter %}
+{% endapply %}
 v

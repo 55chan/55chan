@@ -1,8 +1,8 @@
 <?php
 
-namespace Twig\Extensions\Extension
+namespace Twig\Extensions\Extension;
 
-use \Twig\Extension;
+use Twig\Extension\AbstractExtension;
 
 class Tinyboard extends AbstractExtension
 {
