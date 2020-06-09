@@ -10,11 +10,8 @@ switch ($mode) {
 // Request: GET entrypoint.php?mode=get&extra=1234567890
 // Response: JSON: cookie => "generatedcookie", captchahtml => "captchahtml", expires_in => 120
 case "get":
-  if (!isset ($_GET['extra'])) {
-    die();
-  }
 
-  $extra = $_GET['extra'];
+  $extra = $config['captcha']['extra'];
   $nojs = isset($_GET['nojs']);
 
   $captcha = generate_captcha($extra);
@@ -36,15 +33,14 @@ case "get":
 case "check":
   if (!isset ($_GET['mode'])
    || !isset ($_GET['cookie'])
-   || !isset ($_GET['extra'])
    || !isset ($_GET['text'])) {
     die();
   }
-
+  
   cleanup();
 
   $query = prepare("SELECT * FROM `captchas` WHERE `cookie` = ? AND `extra` = ?");
-  $query->execute([$_GET['cookie'], $_GET['extra']]);
+  $query->execute([$_GET['cookie'], $config['captcha']['extra']]);
   $ary = $query->fetchAll();
 
   if (!$ary) {
@@ -52,7 +48,7 @@ case "check":
   }
   else {
     $query = prepare("DELETE FROM `captchas` WHERE `cookie` = ? AND `extra` = ?");
-    $query->execute([$_GET['cookie'], $_GET['extra']]);
+    $query->execute([$_GET['cookie'], $config['captcha']['extra']]);
 
     if (strtolower($ary[0]['text']) !== strtolower($_GET['text'])) {
       echo "0";
