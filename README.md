@@ -3,7 +3,7 @@
 
 Warning
 ------------
-This software is not production-ready, we still have a lot to do.
+This software is not production-ready, we still have a lot to do. DO NOT PULL YET.
 Use vichan vichan-compatible branch if you want a more stable branch, but it'll only supports PHP <= 7.3
 
 About
