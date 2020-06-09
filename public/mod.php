@@ -3,7 +3,7 @@
 /*
  *  Copyright (c) 2010-2014 Tinyboard Development Group
  */
-
+chdir("..");
 require_once 'inc/functions.php';
 
 if ($config['debug'])
@@ -201,4 +201,3 @@ foreach ($pages as $uri => $handler) {
 }
 
 error($config['error']['404']);
-

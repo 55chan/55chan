@@ -8,6 +8,7 @@
 /tmp/locks/*
 !/tmp/cache/.gitkeep
 !/tmp/locks/.gitkeep
+!/inc/templates/cache
 
 #vichan custom
 favicon.ico
@@ -23,7 +24,7 @@ favicon.ico
 /public/*.html
 
 # include some files though
-!/templates/*.html
+!/inc/templates/*.html
 !/inc/config.php
 
 # minify

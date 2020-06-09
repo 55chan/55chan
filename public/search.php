@@ -1,4 +1,5 @@
 <?php
+	chdir("..");
 	require 'inc/functions.php';
 	
 	if (!$config['search']['enable']) {

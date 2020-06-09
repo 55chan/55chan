@@ -2,6 +2,7 @@
 
 // Installation/upgrade file	
 define('VERSION', '5.1.5');
+chdir("..");
 require 'inc/functions.php';
 loadConfig();
 
@@ -863,8 +864,8 @@ if ($step == 0) {
 		),
 		array(
 			'category' => 'File permissions',
-			'name' => getcwd() . '/templates/cache',
-			'result' => is_writable('templates') || (is_dir('templates/cache') && is_writable('templates/cache')),
+			'name' => getcwd() . '/inc/templates/cache',
+			'result' => is_writable('inc/templates') || (is_dir('inc/templates/cache') && is_writable('inc/templates/cache')),
 			'required' => true,
 			'message' => 'You must give vichan permission to create (and write to) the <code>templates/cache</code> directory or performance will be drastically reduced.'
 		),
@@ -1041,4 +1042,3 @@ if ($step == 0) {
 	
 	echo Element('page.html', $page);
 }
-
