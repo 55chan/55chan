@@ -338,7 +338,7 @@
 	$config['captcha']['provider_check'] = '../inc/captcha/entrypoint.php';
 
 	// Custom captcha extra field (eg. charset)
-	 $config['captcha']['extra'] = 'abcdefghijklmnopqrstuvwxyz';
+	$config['captcha']['extra'] = 'abcdefghijklmnopqrstuvwxyz';
 	
 	// Ability to lock a board for normal users and still allow mods to post.  Could also be useful for making an archive board
 	$config['board_locked'] = false;
