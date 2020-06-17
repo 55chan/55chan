@@ -984,7 +984,7 @@ if ($step == 0) {
 	
 	buildJavascript();
 	
-	$sql = @file_get_contents('{$config['public']}install.sql') or error("Couldn't load install.sql.");
+	$sql = @file_get_contents("{$config['public']}install.sql") or error("Couldn't load install.sql.");
 	
 	sql_open();
 	$mysql_version = mysql_version();
